@@ -26,7 +26,7 @@ import {
   type PeriodTab,
 } from "../../utils/dateFilters";
 
-const EMPTY_EXPENSES_MESSAGE = "Вы пока не записали свои траты";
+const EMPTY_MESSAGE = "Вы пока не записали траты и доходы";
 
 function formatDate(dateStr: string): string {
   const d = new Date(dateStr);
@@ -64,12 +64,9 @@ const FinanceDashboard = () => {
   }, [dispatch, items.length]);
 
   const periodItems = filterByPeriod(items, tab);
-  const sortedExpenses = periodItems
-    .filter((transaction) => transaction.amount < 0)
-    .sort(
-      (transaction1, transaction2) =>
-        new Date(transaction2.date).getTime() - new Date(transaction1.date).getTime()
-    );
+  const sortedTransactions = [...periodItems].sort(
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+  );
 
   const totalAmount = items.reduce((sum, transaction) => sum + transaction.amount, 0);
   const totalExpensesAll = items
@@ -188,17 +185,17 @@ const FinanceDashboard = () => {
           <Typography color="text.secondary" textAlign="center" py={3}>
             Загрузка...
           </Typography>
-        ) : sortedExpenses.length === 0 ? (
+        ) : sortedTransactions.length === 0 ? (
           <Typography
             color="text.secondary"
             textAlign="center"
             py={4}
             px={2}
           >
-            {EMPTY_EXPENSES_MESSAGE}
+            {EMPTY_MESSAGE}
           </Typography>
         ) : (
-          sortedExpenses.map((transaction) => (
+          sortedTransactions.map((transaction) => (
             <TransactionCard key={transaction.id} transaction={transaction} />
           ))
         )}
@@ -213,7 +210,6 @@ function TransactionCard({ transaction }: { transaction: Transaction }) {
   const label = getCategoryLabel(transaction.categoryId);
   const icon = getCategoryIcon(transaction.categoryId);
   const amount = transaction.amount;
-  const isExpense = amount < 0;
 
   return (
     <Card sx={{ borderRadius: 2 }}>
@@ -230,9 +226,9 @@ function TransactionCard({ transaction }: { transaction: Transaction }) {
           </Box>
           <Typography
             fontWeight={600}
-            color={isExpense ? "error.main" : "primary.main"}
+            color={amount < 0 ? "error.main" : "success.main"}
           >
-            {isExpense ? "-" : ""}
+            {amount < 0 ? "-" : "+"}
             {Math.abs(amount).toLocaleString("en-US", {
               style: "currency",
               currency: "USD",

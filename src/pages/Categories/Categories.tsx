@@ -14,9 +14,13 @@ import SavingsIcon from "@mui/icons-material/Savings";
 import ConfirmationNumberIcon from "@mui/icons-material/ConfirmationNumber";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import { fetchTransactions } from "../../transactionsRedux/transactionsTrunk";
-import { useAppDispatch, useAppSelector } from "../../storage/hooks/useAppDispatch";
+import {
+  useAppDispatch,
+  useAppSelector,
+} from "../../storage/hooks/useAppDispatch";
 import { useThemeMode } from "../../useThemeMode";
 import { AppBottomNav } from "../../components/AppBottomNav/AppBottomNav";
+import { ROUTE } from "../../routes";
 
 export const Categories = () => {
   const navigate = useNavigate();
@@ -35,7 +39,7 @@ export const Categories = () => {
     .filter((t) => t.amount < 0)
     .reduce((sum, t) => sum + Math.abs(t.amount), 0);
   const categories = [
-    { id: "income", label: "Salary", icon: <AccountBalanceWalletIcon /> },
+    { id: "salary", label: "Salary", icon: <AccountBalanceWalletIcon /> },
     { id: "food", label: "Food", icon: <RestaurantIcon /> },
     { id: "transport", label: "Transport", icon: <DirectionsBusIcon /> },
     { id: "medicine", label: "Medicine", icon: <MedicationIcon /> },
@@ -59,13 +63,18 @@ export const Categories = () => {
         flexDirection: "column",
       })}
     >
-      <Box sx={(theme) => ({ px: 3, pt: 4, color: theme.palette.common.white })}>
+      <Box
+        sx={(theme) => ({ px: 3, pt: 4, color: theme.palette.common.white })}
+      >
         <Stack
           direction="row"
           justifyContent="space-between"
           alignItems="center"
         >
-          <IconButton sx={{ color: "inherit" }} onClick={() => navigate(-1)}>
+          <IconButton
+            sx={{ color: "inherit" }}
+            onClick={() => navigate(ROUTE.HOME())}
+          >
             <ArrowBackIosNewIcon />
           </IconButton>
           <Typography fontWeight={600} fontSize={18}>
@@ -101,7 +110,11 @@ export const Categories = () => {
 
           <Box textAlign="right">
             <Typography fontSize={12}>Total Expense</Typography>
-            <Typography fontWeight={700} fontSize={20} sx={{ color: "text.primary" }}>
+            <Typography
+              fontWeight={700}
+              fontSize={20}
+              sx={{ color: "text.primary" }}
+            >
               -
               {totalExpenses.toLocaleString("en-US", {
                 style: "currency",
@@ -110,7 +123,6 @@ export const Categories = () => {
             </Typography>
           </Box>
         </Stack>
-
       </Box>
 
       <Box
@@ -138,8 +150,8 @@ export const Categories = () => {
                 cursor: "pointer",
               }}
             >
-<Box
-              sx={(theme) => ({
+              <Box
+                sx={(theme) => ({
                   width: 72,
                   height: 72,
                   margin: "0 auto",

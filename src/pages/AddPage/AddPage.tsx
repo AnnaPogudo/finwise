@@ -48,7 +48,13 @@ const AddPage = () => {
 
   const category = categoryConfig[categoryId as keyof typeof categoryConfig];
 
-  const amountNum = Math.abs(parseFloat(amount) || 0);
+  const parseAmount = (raw: string): number => {
+    const cleaned = String(raw).replace(/\s/g, "").replace(/,/g, ".");
+    const parsed = parseFloat(cleaned);
+    if (Number.isNaN(parsed) || parsed < 0) return 0;
+    return Math.round(parsed * 100) / 100;
+  };
+  const amountNum = parseAmount(amount);
   const canSubmit =
     user?.id &&
     amountNum > 0 &&
@@ -59,7 +65,8 @@ const AddPage = () => {
     if (!canSubmit || !user?.id) return;
     setError(null);
     setLoading(true);
-    const value = transactionType === "deposit" ? amountNum : -amountNum;
+    const num = parseAmount(amount);
+    const value = transactionType === "deposit" ? num : -num;
     try {
       await dispatch(
         addTransaction({
@@ -177,8 +184,9 @@ const AddPage = () => {
           <Stack spacing={2}>
             <TextField
               label="Сумма"
-              type="number"
-              // inputProps={{ min: 0 }}
+              type="text"
+              inputMode="decimal"
+              placeholder="0.00"
               value={amount}
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
                 setAmount(e.target.value)
@@ -212,7 +220,6 @@ const AddPage = () => {
               type="date"
               value={date}
               onChange={(e) => setDate(e.target.value)}
-              // InputLabelProps={{ shrink: true }}
               fullWidth
             />
 

@@ -22,6 +22,9 @@ export const getDesignTokens = (mode: PaletteMode) => ({
       primary: mode === "light" ? "#06141f" : "#f9fafb",
       secondary: mode === "light" ? "#4b5c70" : "#9ca3af",
     },
+    success: {
+      main: mode === "light" ? "#2e7d32" : "#4caf50",
+    },
   },
   shape: {
     borderRadius: 20,

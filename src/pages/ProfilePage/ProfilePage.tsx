@@ -54,7 +54,7 @@ export const ProfilePage = () => {
         })}
       >
         <Stack direction="row" justifyContent="space-between" alignItems="center">
-          <IconButton sx={{ color: "inherit" }} onClick={() => navigate(-1)}>
+          <IconButton sx={{ color: "inherit" }} onClick={() => navigate(ROUTE.HOME())}>
             <ArrowBackIosNewIcon />
           </IconButton>
           <Typography fontSize={22} fontWeight={700}>
