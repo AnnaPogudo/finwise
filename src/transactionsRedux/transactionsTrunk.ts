@@ -6,12 +6,18 @@ const API_URL =
 
 export const fetchTransactions = createAsyncThunk<Transaction[]>(
   "transactions/fetchAll",
-  async () => {
-    const res = await fetch(API_URL);
+  async (_, { getState, rejectWithValue }) => {
+    const state = getState() as { auth: { user: { id: string } | null } };
+    const userId = state.auth.user?.id;
+    if (!userId) {
+      return rejectWithValue("Not logged in");
+    }
+    const res = await fetch(`${API_URL}?userId=${encodeURIComponent(userId)}`);
     if (!res.ok) {
       throw new Error("Failed to fetch transactions");
     }
-    return res.json();
+    const data: Transaction[] = await res.json();
+    return data.filter((t) => t.userId === userId);
   }
 );
 

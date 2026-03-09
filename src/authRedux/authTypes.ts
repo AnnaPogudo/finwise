@@ -16,11 +16,13 @@ export interface RegisterPayload {
   email: string;
   password: string;
   profileImage?: string | null;
+  phone?: string;
 }
 
 export interface UpdateProfilePayload {
   phone?: string;
   email?: string;
   password?: string;
+  profileImage?: string | null;
 }
 

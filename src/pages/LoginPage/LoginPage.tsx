@@ -4,8 +4,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { AuthLayout } from "../AuthLayout/AuthLayout";
 import { AuthInput } from "../../components/Input/Input";
 import { PasswordInput } from "../../components/PasswordInput/PasswordInput";
-import { useAppDispatch, useAppSelector } from "../../storage/hooks/hooks";
-import { login } from "../../authRedux/authTrunk";
+import { useAppDispatch, useAppSelector } from "../../storage/hooks/useAppDispatch";
+import { login } from "../../authRedux/authThunk";
 import { ROUTE } from "../../routes";
 
 export const LoginPage = () => {
@@ -20,6 +20,7 @@ export const LoginPage = () => {
       await dispatch(login({ email, password })).unwrap();
       navigate(ROUTE.HOME());
     } catch {
+      console.error("Login failed");
     }
   };
 

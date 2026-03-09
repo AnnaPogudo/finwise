@@ -10,7 +10,7 @@ import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 
 export const categoryConfig = {
   income: {
-    label: "Зарплата / Доход",
+    label: "Salary",
     icon: <AccountBalanceWalletIcon />,
     gradient: "linear-gradient(135deg,#43e97b,#38f9d7)",
   },

@@ -72,12 +72,17 @@ export const updateProfile = createAsyncThunk<
       ...current,
       ...(payload.phone !== undefined && { phone: payload.phone }),
       ...(payload.email !== undefined && { email: payload.email }),
+      ...(payload.profileImage !== undefined && { profileImage: payload.profileImage }),
     };
+    const profileImageToSend =
+      payload.profileImage !== undefined
+        ? payload.profileImage
+        : (current.profileImage ?? null);
     const body: Record<string, unknown> = {
       id: updated.id,
       fullName: updated.fullName,
       email: updated.email,
-      profileImage: updated.profileImage ?? null,
+      profileImage: profileImageToSend,
       ...(updated.phone !== undefined && { phone: updated.phone }),
       ...(payload.password !== undefined && { password: payload.password }),
     };
@@ -93,8 +98,16 @@ export const updateProfile = createAsyncThunk<
     }
 
     const data: User = await res.json();
-    localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(data));
-    return data;
+    const mergedUser: User = {
+      ...current,
+      ...data,
+      profileImage:
+        (data.profileImage && String(data.profileImage).trim()) ||
+        (current.profileImage && String(current.profileImage).trim()) ||
+        undefined,
+    };
+    localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(mergedUser));
+    return mergedUser;
   }
 );
 

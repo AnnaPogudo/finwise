@@ -1,10 +1,21 @@
 import { useState, type ChangeEvent } from "react";
-import { Button, Typography, Box, Alert, IconButton } from "@mui/material";
+import {
+  Button,
+  Typography,
+  Box,
+  Alert,
+  IconButton,
+  Avatar,
+  TextField,
+} from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import { AuthInput } from "../../components/Input/Input";
-import { useAppDispatch, useAppSelector } from "../../storage/hooks/hooks";
-import { updateProfile } from "../../authRedux/authTrunk";
+import {
+  useAppDispatch,
+  useAppSelector,
+} from "../../storage/hooks//useAppDispatch";
+import { updateProfile } from "../../authRedux/authThunk";
 import { ROUTE } from "../../routes";
 import { AuthLayout } from "../AuthLayout/AuthLayout";
 
@@ -13,12 +24,15 @@ export const EditProfilePage = () => {
   const { loading, error } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-
+  const currentAvatar = user?.profileImage || "";
+  const [avatarUrl, setAvatarUrl] = useState(currentAvatar);
   const [phone, setPhone] = useState(user?.phone ?? "");
   const [email, setEmail] = useState(user?.email ?? "");
 
   const hasChanges =
-    phone !== (user?.phone ?? "") || email !== (user?.email ?? "");
+    phone !== (user?.phone ?? "") ||
+    email !== (user?.email ?? "") ||
+    (avatarUrl.trim() !== "" && avatarUrl !== currentAvatar);
 
   const handleSubmit = async () => {
     if (!user?.id) return;
@@ -29,10 +43,14 @@ export const EditProfilePage = () => {
           userId: user.id,
           ...(phone !== (user.phone ?? "") && { phone }),
           ...(email !== user.email && { email }),
-        })
+          ...(avatarUrl.trim() !== "" && avatarUrl !== user?.profileImage && {
+            profileImage: avatarUrl,
+          }),
+        }),
       ).unwrap();
       navigate(ROUTE.PROFILE());
     } catch {
+      console.error("Profile update failed");
     }
   };
 
@@ -54,6 +72,20 @@ export const EditProfilePage = () => {
         </IconButton>
       </Box>
       <AuthLayout title="Edit Profile">
+      <Box sx={{ display: "flex", alignItems: "center", mb: 3, justifyContent:"center", flexDirection:"column" }}>
+        <Avatar
+          src={(avatarUrl || user?.profileImage) || "/default-avatar.svg"}
+          sx={{ width: 80, height: 80, mr: 2 }}
+        />
+        <TextField
+          label="Avatar URL"
+          variant="outlined"
+          size="small"
+          value={avatarUrl}
+          onChange={(e) => setAvatarUrl(e.target.value)}
+          placeholder="https://example.com/avatar.png"
+        />
+      </Box>
         <AuthInput
           label="Phone"
           type="tel"

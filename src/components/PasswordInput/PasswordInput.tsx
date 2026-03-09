@@ -16,8 +16,8 @@ export const PasswordInput = ({ label, ...rest }: PasswordInputProps) => {
       variant="outlined"
       type={show ? "text" : "password"}
       label={label}
-margin="normal"
-    {...rest}
+      margin="normal"
+      {...rest}
       slotProps={{
         input: {
           endAdornment: (

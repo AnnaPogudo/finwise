@@ -17,8 +17,8 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import TrendingDownIcon from "@mui/icons-material/TrendingDown";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import { useNavigate, useParams } from "react-router-dom";
-import { categoryConfig } from "../../constants/categoriesConfig";
-import { useAppDispatch, useAppSelector } from "../../storage/hooks/hooks";
+import { categoryConfig } from "../../config/categoriesConfig";
+import { useAppDispatch, useAppSelector } from "../../storage/hooks/useAppDispatch";
 import { addTransaction } from "../../transactionsRedux/transactionsTrunk";
 import type { TransactionType } from "../../enums/typeResponse";
 import { ROUTE } from "../../routes";
@@ -178,7 +178,7 @@ const AddPage = () => {
             <TextField
               label="Сумма"
               type="number"
-              inputProps={{ min: 0, step: 0.01 }}
+              // inputProps={{ min: 0 }}
               value={amount}
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
                 setAmount(e.target.value)
@@ -212,7 +212,7 @@ const AddPage = () => {
               type="date"
               value={date}
               onChange={(e) => setDate(e.target.value)}
-              InputLabelProps={{ shrink: true }}
+              // InputLabelProps={{ shrink: true }}
               fullWidth
             />
 

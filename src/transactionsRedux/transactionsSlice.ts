@@ -1,6 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { Transaction } from "../enums/typeResponse";
 import { fetchTransactions, addTransaction } from "./transactionsTrunk";
+import { logout } from "../authRedux/authSlice";
+import { login, register } from "../authRedux/authThunk";
 
 interface TransactionsState {
   items: Transaction[];
@@ -20,6 +22,18 @@ const transactionsSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+      .addCase(logout, (state) => {
+        state.items = [];
+        state.error = null;
+      })
+      .addCase(login.fulfilled, (state) => {
+        state.items = [];
+        state.error = null;
+      })
+      .addCase(register.fulfilled, (state) => {
+        state.items = [];
+        state.error = null;
+      })
       .addCase(fetchTransactions.pending, (state) => {
         state.loading = true;
       })
@@ -30,6 +44,7 @@ const transactionsSlice = createSlice({
       .addCase(fetchTransactions.rejected, (state) => {
         state.loading = false;
         state.error = "Failed to load";
+        state.items = [];
       })
       .addCase(addTransaction.fulfilled, (state, action) => {
         state.items.push(action.payload);

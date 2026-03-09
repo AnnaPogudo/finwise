@@ -4,8 +4,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { AuthLayout } from "../AuthLayout/AuthLayout";
 import { AuthInput } from "../../components/Input/Input";
 import { PasswordInput } from "../../components/PasswordInput/PasswordInput";
-import { useAppDispatch, useAppSelector } from "../../storage/hooks/hooks";
-import { register } from "../../authRedux/authTrunk";
+import { useAppDispatch, useAppSelector } from "../../storage/hooks/useAppDispatch";
+import { register } from "../../authRedux/authThunk";
 import { ROUTE } from "../../routes";
 
 export const RegisterPage = () => {
@@ -14,6 +14,7 @@ export const RegisterPage = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [avatarUrl, setAvatarUrl] = useState("");
+const [phone, setPhone] = useState("");
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -27,16 +28,17 @@ export const RegisterPage = () => {
 
     try {
       await dispatch(
-        register({ fullName, email, password, profileImage: avatarUrl || undefined })
+        register({ fullName, email, password, phone, profileImage: avatarUrl || undefined })
       ).unwrap();
       navigate(ROUTE.HOME());
     } catch {
+      console.error("Registration failed");
     }
   };
 
   return (
     <AuthLayout title="Create Account">
-      <Box sx={{ display: "flex", alignItems: "center", mb: 3, ml: 5, justifyContent:"center", flexDirection:"column" }}>
+      <Box sx={{ display: "flex", alignItems: "center", mb: 3, justifyContent:"center", flexDirection:"column" }}>
         <Avatar
           src={avatarUrl || "/default-avatar.svg"}
           sx={{ width: 80, height: 80, mr: 2 }}
@@ -61,7 +63,7 @@ export const RegisterPage = () => {
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
-      <AuthInput label="Mobile Number" />
+      <AuthInput label="Mobile Number" value={phone} onChange={(e) => setPhone(e.target.value)} />
       <AuthInput label="Date Of Birth" />
       <PasswordInput
         label="Password"

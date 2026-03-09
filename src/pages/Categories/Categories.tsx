@@ -14,7 +14,7 @@ import SavingsIcon from "@mui/icons-material/Savings";
 import ConfirmationNumberIcon from "@mui/icons-material/ConfirmationNumber";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import { fetchTransactions } from "../../transactionsRedux/transactionsTrunk";
-import { useAppDispatch, useAppSelector } from "../../storage/hooks/hooks";
+import { useAppDispatch, useAppSelector } from "../../storage/hooks/useAppDispatch";
 import { useThemeMode } from "../../useThemeMode";
 import { AppBottomNav } from "../../components/AppBottomNav/AppBottomNav";
 
@@ -22,7 +22,7 @@ export const Categories = () => {
   const navigate = useNavigate();
   const { mode, toggleTheme } = useThemeMode();
   const dispatch = useAppDispatch();
-  const { items, loading } = useAppSelector((state) => state.transactions);
+  const { items } = useAppSelector((state) => state.transactions);
 
   useEffect(() => {
     if (!items.length) {
@@ -34,11 +34,6 @@ export const Categories = () => {
   const totalExpenses = items
     .filter((t) => t.amount < 0)
     .reduce((sum, t) => sum + Math.abs(t.amount), 0);
-
-  const spendingPercent =
-    totalAmount !== 0
-      ? Math.min(100, Math.round((totalExpenses / Math.abs(totalAmount)) * 100))
-      : 0;
   const categories = [
     { id: "income", label: "Salary", icon: <AccountBalanceWalletIcon /> },
     { id: "food", label: "Food", icon: <RestaurantIcon /> },
@@ -106,7 +101,7 @@ export const Categories = () => {
 
           <Box textAlign="right">
             <Typography fontSize={12}>Total Expense</Typography>
-            <Typography fontWeight={700} fontSize={20} color="primary.main">
+            <Typography fontWeight={700} fontSize={20} sx={{ color: "text.primary" }}>
               -
               {totalExpenses.toLocaleString("en-US", {
                 style: "currency",
@@ -116,51 +111,6 @@ export const Categories = () => {
           </Box>
         </Stack>
 
-        <Box sx={{ mt: 3 }}>
-          <Box
-            sx={(theme) => ({
-              height: 26,
-              background: theme.palette.background.paper,
-              borderRadius: 20,
-              display: "flex",
-              alignItems: "center",
-              overflow: "hidden",
-            })}
-          >
-            <Box
-              sx={(theme) => ({
-                width: loading ? "0%" : `${spendingPercent}%`,
-                height: "100%",
-                background: theme.palette.primary.main,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                color: "white",
-                fontSize: 12,
-                fontWeight: 600,
-                transition: "width 0.3s ease",
-              })}
-            >
-              {loading ? "Loading..." : `${spendingPercent}%`}
-            </Box>
-
-            <Box
-              sx={(theme) => ({
-                flex: 1,
-                textAlign: "right",
-                pr: 2,
-                fontSize: 12,
-                fontWeight: 600,
-                color: theme.palette.text.secondary,
-              })}
-            >
-              {totalAmount.toLocaleString("en-US", {
-                style: "currency",
-                currency: "USD",
-              })}
-            </Box>
-          </Box>
-        </Box>
       </Box>
 
       <Box

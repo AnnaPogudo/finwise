@@ -3,8 +3,8 @@ import { Button, Typography, Box, Alert, IconButton } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import { PasswordInput } from "../../components/PasswordInput/PasswordInput";
-import { useAppDispatch, useAppSelector } from "../../storage/hooks/hooks";
-import { updateProfile } from "../../authRedux/authTrunk";
+import { useAppDispatch, useAppSelector } from "../../storage/hooks/useAppDispatch";
+import { updateProfile } from "../../authRedux/authThunk";
 import { ROUTE } from "../../routes";
 import { AuthLayout } from "../AuthLayout/AuthLayout";
 
@@ -28,6 +28,7 @@ export const SecurityPage = () => {
       ).unwrap();
       navigate(ROUTE.PROFILE());
     } catch {
+      console.error("Password update failed");
     }
   };
 

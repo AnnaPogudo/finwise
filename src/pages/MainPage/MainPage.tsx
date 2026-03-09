@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Typography,
@@ -16,11 +16,11 @@ import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import PaymentsIcon from "@mui/icons-material/Payments";
 import { useThemeMode } from "../../useThemeMode";
-import { useAppDispatch, useAppSelector } from "../../storage/hooks/hooks";
+import { useAppDispatch, useAppSelector } from "../../storage/hooks/useAppDispatch";
 import { fetchTransactions } from "../../transactionsRedux/transactionsTrunk";
 import { AppBottomNav } from "../../components/AppBottomNav/AppBottomNav";
 import type { Transaction } from "../../enums/typeResponse";
-import { categoryConfig } from "../../constants/categoriesConfig";
+import { categoryConfig } from "../../config/categoriesConfig";
 import {
   filterByPeriod,
   type PeriodTab,
@@ -42,16 +42,16 @@ function formatDate(dateStr: string): string {
 }
 
 function getCategoryLabel(categoryId: string): string {
-  const cat = categoryConfig[categoryId as keyof typeof categoryConfig];
-  return cat?.label ?? categoryId;
+  const category = categoryConfig[categoryId as keyof typeof categoryConfig];
+  return category?.label ?? categoryId;
 }
 
 function getCategoryIcon(categoryId: string) {
-  const cat = categoryConfig[categoryId as keyof typeof categoryConfig];
-  return cat?.icon ?? <PaymentsIcon />;
+  const category = categoryConfig[categoryId as keyof typeof categoryConfig];
+  return category?.icon ?? <PaymentsIcon />;
 }
 
-const FinanceDashboard: React.FC = () => {
+const FinanceDashboard = () => {
   const [tab, setTab] = useState<PeriodTab>(2);
   const { mode, toggleTheme } = useThemeMode();
   const dispatch = useAppDispatch();
@@ -65,16 +65,16 @@ const FinanceDashboard: React.FC = () => {
 
   const periodItems = filterByPeriod(items, tab);
   const sortedExpenses = periodItems
-    .filter((t) => t.amount < 0)
+    .filter((transaction) => transaction.amount < 0)
     .sort(
-      (a, b) =>
-        new Date(b.date).getTime() - new Date(a.date).getTime()
+      (transaction1, transaction2) =>
+        new Date(transaction2.date).getTime() - new Date(transaction1.date).getTime()
     );
 
-  const totalAmount = items.reduce((sum, t) => sum + t.amount, 0);
+  const totalAmount = items.reduce((sum, transaction) => sum + transaction.amount, 0);
   const totalExpensesAll = items
-    .filter((t) => t.amount < 0)
-    .reduce((sum, t) => sum + Math.abs(t.amount), 0);
+    .filter((transaction) => transaction.amount < 0)
+    .reduce((sum, transaction) => sum + Math.abs(transaction.amount), 0);
   const totalForBarAll = totalExpensesAll + Math.max(0, totalAmount);
   const spendingPercentAll =
     totalForBarAll > 0
@@ -118,7 +118,7 @@ const FinanceDashboard: React.FC = () => {
             <Typography variant="h5" fontWeight={700}>
               <img
                 src="/UpPrice.svg"
-                alt=""
+                alt="up price"
                 style={{ width: 20, height: 20, marginRight: 5 }}
               />
               {totalAmount.toLocaleString("en-US", {
@@ -137,7 +137,7 @@ const FinanceDashboard: React.FC = () => {
             <Typography variant="h5" fontWeight={700} sx={{ color: "text.primary" }}>
               <img
                 src="/LowPrice.svg"
-                alt=""
+                alt="low price"
                 style={{ width: 20, height: 20, marginRight: 5 }}
               />
               -
@@ -198,8 +198,8 @@ const FinanceDashboard: React.FC = () => {
             {EMPTY_EXPENSES_MESSAGE}
           </Typography>
         ) : (
-          sortedExpenses.map((t) => (
-            <TransactionCard key={t.id} transaction={t} />
+          sortedExpenses.map((transaction) => (
+            <TransactionCard key={transaction.id} transaction={transaction} />
           ))
         )}
       </Stack>

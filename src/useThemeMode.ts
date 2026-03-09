@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo } from "react";
-import { useAppDispatch, useAppSelector } from "./storage/hooks/hooks";
+import { useAppDispatch, useAppSelector } from "./storage/hooks/useAppDispatch";
 import { toggleTheme } from "./themeSlice";
 import { createAppTheme } from "./theme";
 import { STORAGE_KEYS } from "./authRedux/storageKeys";

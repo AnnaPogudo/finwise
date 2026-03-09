@@ -15,7 +15,7 @@ import SecurityIcon from "@mui/icons-material/Security";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useThemeMode } from "../../useThemeMode";
-import { useAppDispatch, useAppSelector } from "../../storage/hooks/hooks";
+import { useAppDispatch, useAppSelector } from "../../storage/hooks/useAppDispatch";
 import { logout } from "../../authRedux/authSlice";
 import { ROUTE } from "../../routes";
 import { AppBottomNav } from "../../components/AppBottomNav/AppBottomNav";
@@ -69,7 +69,7 @@ export const ProfilePage = () => {
           sx={{
             position: "absolute",
             left: "50%",
-            bottom: -60,
+            bottom: -40,
             transform: "translateX(-50%)",
             textAlign: "center",
           }}
@@ -79,16 +79,13 @@ export const ProfilePage = () => {
             sx={{ width: 120, height: 120, mx: "auto" }}
           />
           <Typography fontWeight={600} color="white">
-            {user?.fullName || "John Smith"}
+            {user?.fullName || "User"}
           </Typography>
             {user?.email && (
             <Typography variant="body2" sx={{ opacity: 0.9 }}>
               {user.email}
             </Typography>
           )}
-          <Typography variant="body2" sx={{ opacity: 0.8 }}>
-            ID: {user?.id || "—"}
-          </Typography>
         </Box>
       </Box>
 
